@@ -1,0 +1,31 @@
+options(repos = structure(c(CRAN = "https://mirror.dogado.de/cran/")))
+Sys.setenv(TERM_PROGRAM = "vscode")
+
+
+.first <- function() {
+    dir.create(paste0(getwd(), "/figures"), showWarnings = F)
+    dir.create(paste0(getwd(), "/processed-data"), showWarnings = F)
+    dir.create(paste0(getwd(), "/data"), showWarnings = F)
+    dir.create(paste0(getwd(), "/src"), showWarnings = F)
+    dir.create(paste0(getwd(), "/manuscript"), showWarnings = F)
+
+    if (!("renv" %in% list.files())) {
+        renv::init()
+    } else {
+        source("renv/activate.R")
+    }
+
+    cat("\nWelcome to your R-project : ", basename(getwd()), "\n")
+}
+
+.first()
+# for httpgd
+if (interactive() && Sys.getenv("TERM_PROGRAM") == "vscode") {
+  if ("httpgd" %in% .packages(all.available = TRUE)) {
+    options(vsc.plot = FALSE)
+    options(device = function(...) {
+      httpgd::hgd(silent = TRUE)
+      .vsc.browser(httpgd::hgd_url(), viewer = "Beside")
+    })
+  }
+}
